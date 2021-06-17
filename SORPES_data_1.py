@@ -12,12 +12,11 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
 
-
 #%% We read data from SORPES:
     
 xls = pd.ExcelFile('SORPES data/gas_aerosol_SORPES_2019.xlsx')
 SheetNames = xls.sheet_names  # see all sheet names
-#xls.parse(SheetNames)  # read a specific sheet to DataFrame
+
 gas_VOCs_aerosol = pd.read_excel(xls, SheetNames[0])
 PNSD             = pd.read_excel(xls, SheetNames[1])    
 SA_HOM           = pd.read_excel(xls, SheetNames[2])
@@ -27,7 +26,7 @@ SA_HOM           = pd.read_excel(xls, SheetNames[2])
 #df_SORPES = pd.read_csv('SORPES data/gas_aerosol_SORPES_2019.xlsx')
 #df_SORPES = pd.read_excel('SORPES data/gas_aerosol_SORPES_2019.xlsx')
 
-#%% To check the available variables on each sheet
+#%% Print the available variables on each sheet
 
 print('gas VOCs aerosol variables include:')
 for col in gas_VOCs_aerosol:
@@ -42,21 +41,19 @@ for col in SA_HOM:
     print(col)      
     
 #%% Download Vaisala (installed in SORPES)
+
 Vaisala1 = pd.read_csv('clean_vaisala_data2/P1720668.csv') # Ngaco (in Tower)
 Vaisala2 = pd.read_csv('clean_vaisala_data2/P1720669.csv')  # SORPES 
 
-
-#print(Vaisala1.dtypes)
-#print(Vaisala2.dtypes) 
-# Give detailed information of Vaisala data
+# Provide detailed information of Vaisala data
 Vaisala1.info()
 Vaisala2.info()
 
 
-# From the above informaiton, many data contain 'object", we need
-# to change them all to float64, except for col "Time", 
+# From the above informaiton, many data vars contain 'object", 
+# we need to change them all to float64, except for col "Time", 
 # So, we collect all columns names, except "Time"
-cols = Vaisala2.columns.drop('Time') # This is better
+cols = Vaisala2.columns.drop('Time') 
 
 # Next, we use the "cols" names, to make them 'float'
 # Replace blank value with nan and now everything becomes float number
@@ -64,21 +61,22 @@ cols = Vaisala2.columns.drop('Time') # This is better
 Vaisala2[cols] = Vaisala2[cols].apply(pd.to_numeric, errors='coerce')
 print(Vaisala2.dtypes) 
 
-# Do the same for df1
+# Do the same for Vaisala1 data
 cols = Vaisala1.columns.drop('Time') 
 Vaisala1[cols] = Vaisala1[cols].apply(pd.to_numeric, errors='coerce')
 print(Vaisala1.dtypes) 
-
-
 
 
 # We select only relevant SORPES data 
 SORPES1 = gas_VOCs_aerosol.iloc[:,0:9]
 
 SORPES1.info()
+Vaisala1.info()
 Vaisala2.info()
 Summary_SORPES1 = SORPES1.describe()
+Summary_Vaisala1 = Vaisala1.describe()
 Summary_Vaisala2 = Vaisala2.describe()
+
 
 
 #%% Sync data: SORPES-Vaisala dataframe merging:
@@ -128,12 +126,40 @@ SORPES1b = SORPES1a.resample('1H').mean()
 
 sns.set(rc={'figure.figsize':(11, 4)})
 sns.set(font_scale=1.5, rc={'text.usetex' : False})
+ax = SORPES1['PM2.5（μg/m3）'].plot(linewidth=0.5);
+Vaisala2['PM25'].plot(linewidth=0.5);
+ax.set_title('To observe PM$_{2.5}$ before modifying time-zone')
+ax.set_ylabel('PM$_{2.5}$ [$\mu g/m^3$]')
+plt.ylim(0, None)
+plt.legend(labels=["SORPES1 (before resample-time change)","Vaisala1 (before resample-time change)"])
+plt.style.use('seaborn')
+
+sns.set(rc={'figure.figsize':(11, 4)})
+sns.set(font_scale=1.5, rc={'text.usetex' : False})
 ax = SORPES1b['PM2.5（μg/m3）'].plot(linewidth=0.5);
 Vaisala2b['PM25'].plot(linewidth=0.5);
 ax.set_title('To observe PM$_{2.5}$ before merging the data of Vaisala-SORPES')
 ax.set_ylabel('PM$_{2.5}$ [$\mu g/m^3$]')
+plt.ylim(0, None)
+plt.legend(labels=["SORPES1b (after resample)","Vaisala2b (after resample)"])
 plt.style.use('seaborn')
-#plt.style.use('tex')
+
+# To check if there is an effect before and after resample
+# ANSWER: NOT MUCH EFFECT, the procedure is correct
+sns.set(rc={'figure.figsize':(11, 4)})
+sns.set(font_scale=1.5, rc={'text.usetex' : False})
+ax = SORPES1a['PM2.5（μg/m3）'].plot(linewidth=0.5);
+Vaisala2a['PM25'].plot(linewidth=0.5);
+Vaisala2b['PM25'].plot(linewidth=0.5);
+ax.set_title('Before and after resample, SORPES and Vaisala are very different')
+ax.set_ylabel('PM$_{2.5}$ [$\mu g/m^3$]')
+plt.ylim(0, None)
+plt.legend(labels=["SORPES","Vaisala2a (before resample)","Vaisala2b (after resample)"])
+plt.style.use('seaborn')
+
+#%% Now, we will combine all data, SORPES1b, Vaisala1b and Vaisala1a
+# We need to relabel the names of columns first
+
 
 
 # We concatanete the data:
@@ -153,20 +179,10 @@ print(SUMMARY['PM2.5（μg/m3）'])
 
 
 
-
-
 #%% Data Visualization (time-series)
 
-# Use seaborn style defaults and set the default figure size
-sns.set(rc={'figure.figsize':(11, 4)})
-sns.set(font_scale=1.5, rc={'text.usetex' : False})
-ax = SORPES1a['PM2.5（μg/m3）'].plot(linewidth=0.5);
-Vaisala2a['PM25'].plot(linewidth=0.5);
-Vaisala2b['PM25'].plot(linewidth=0.5);
-ax.set_title('Before and after resample, SORPES and Vaisala are very different')
-ax.set_ylabel('PM$_{2.5}$ [$\mu g/m^3$]')
-plt.style.use('seaborn')
 
+#%%
 
 # Use seaborn style defaults and set the default figure size
 sns.set(rc={'figure.figsize':(11, 4)})

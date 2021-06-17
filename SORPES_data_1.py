@@ -45,6 +45,7 @@ for col in SA_HOM:
 Vaisala1 = pd.read_csv('clean_vaisala_data2/P1720668.csv') # Ngaco (in Tower)
 Vaisala2 = pd.read_csv('clean_vaisala_data2/P1720669.csv')  # SORPES 
 
+
 # Provide detailed information of Vaisala data
 Vaisala1.info()
 Vaisala2.info()
@@ -181,8 +182,19 @@ SORPES1b.rename(columns={'O3 ppb': 'O3s', 'SO2 ppb': 'SO2s', 'CO ppm': 'COs', 'N
              , 'PM2.5（μg/m3）': 'PM25s'},inplace=True)
 
 
+from DataProcessing1 import VaisalaPreProcess
+
+Vaisala3 = pd.read_csv('clean_vaisala_data2/P1910347.csv') #
+Vaisala4 = pd.read_csv('clean_vaisala_data2/P1910345.csv') #
+Vaisala5 = pd.read_csv('clean_vaisala_data2/P2150596.csv')  #
+Vaisala3b=VaisalaPreProcess(Vaisala3,3)
+Vaisala4b=VaisalaPreProcess(Vaisala4,4)
+Vaisala5b=VaisalaPreProcess(Vaisala5,5)
+
 # We concatanete the data:
-DATA2 = pd.concat([SORPES1b,Vaisala1b,Vaisala2b], join='inner', axis=1)
+#DATA2 = pd.concat([SORPES1b,Vaisala1b,Vaisala2b], join='inner', axis=1)
+DATA2 = pd.concat([SORPES1b,Vaisala1b,Vaisala2b,Vaisala3b,Vaisala4b,Vaisala5b], join='inner', axis=1)
+
 
 # See the columns, if they are merged:
 for col in DATA2:
@@ -198,6 +210,12 @@ print(SUMMARY['PM25v1'])
 print(SUMMARY['PM25v2'])
 
 #%% Consistency Test: Meteorological variables
+# We need to:
+    # Clean the code and make more functions for cleaning
+    # Scatter plot covers entire Vaisala sensors
+
+
+
 # Scatter plots
 
 f, (ax1, ax2, ax3) = plt.subplots(1, 3, sharey=True)
@@ -234,9 +252,12 @@ ax1 = plt.subplot(311)
 #DATA2['Ts'].plot(ax=ax1,linewidth=0.5);
 DATA2['Tv1'].plot(ax=ax1,linewidth=0.5);
 DATA2['Tv2'].plot(ax=ax1,linewidth=0.5);
+DATA2['Tv3'].plot(ax=ax1,linewidth=0.5);
+DATA2['Tv4'].plot(ax=ax1,linewidth=0.5);
+DATA2['Tv5'].plot(ax=ax1,linewidth=0.5);
 #ax1.set_title('Time-series data: Temperature')
 ax1.set_ylabel('Temp [$^{\circ}$C]')
-ax1.legend(labels=["Vaisala1","Vaisala2"])
+ax1.legend(labels=["Vaisala1","Vaisala2","Vaisala3","Vaisala4","Vaisala5"])
 ax1.set_ylim([-10, 50])
 #plt.style.use('seaborn')
 
@@ -245,9 +266,12 @@ ax2 = plt.subplot(312)
 #DATA2['RHs'].plot(ax=ax1,linewidth=0.5);
 DATA2['RHv1'].plot(ax=ax2,linewidth=0.5);
 DATA2['RHv2'].plot(ax=ax2,linewidth=0.5);
+DATA2['RHv3'].plot(ax=ax2,linewidth=0.5);
+DATA2['RHv4'].plot(ax=ax2,linewidth=0.5);
+DATA2['RHv5'].plot(ax=ax2,linewidth=0.5);
 #ax2.set_title('Time-series data: Relative Humidity')
 ax2.set_ylabel('RH [%]')
-ax2.legend(labels=["Vaisala1","Vaisala2"])
+ax2.legend(labels=["Vaisala1","Vaisala2","Vaisala3","Vaisala4","Vaisala5"])
 ax2.set_ylim([10, 100])
 #plt.style.use('seaborn')
 
@@ -256,9 +280,12 @@ ax3 = plt.subplot(313)
 #DATA2['RHs'].plot(ax=ax1,linewidth=0.5);
 DATA2['Pv1'].plot(ax=ax3,linewidth=0.5);
 DATA2['Pv2'].plot(ax=ax3,linewidth=0.5);
+DATA2['Pv3'].plot(ax=ax3,linewidth=0.5);
+DATA2['Pv4'].plot(ax=ax3,linewidth=0.5);
+DATA2['Pv5'].plot(ax=ax3,linewidth=0.5);
 #ax3.set_title('Time-series data: Pressure')
 ax3.set_ylabel('P [mbar]')
-ax3.legend(labels=["Vaisala1","Vaisala2"])
+ax3.legend(labels=["Vaisala1","Vaisala2","Vaisala3","Vaisala4","Vaisala5"])
 ax3.set_ylim([950, 1050])
 plt.style.use('seaborn')
 

@@ -97,6 +97,17 @@ Summary_Vaisala2 = Vaisala2.describe()
 
 # To allow resample, convert column date to datetimes:
 # https://stackoverflow.com/questions/57703538/typeerror-only-valid-with-datetimeindex-timedeltaindex-or-periodindex-but-got    
+Vaisala1['Time'] = pd.to_datetime(Vaisala1['Time'])
+# set the datetime as index:
+Vaisala1 = Vaisala1.set_index('Time')
+# Convert the timezone:
+Vaisala1a = Vaisala1.tz_convert('Asia/Shanghai') 
+# resample
+Vaisala1b = Vaisala1a.resample('1H').mean()
+
+
+# To allow resample, convert column date to datetimes:
+# https://stackoverflow.com/questions/57703538/typeerror-only-valid-with-datetimeindex-timedeltaindex-or-periodindex-but-got    
 Vaisala2['Time'] = pd.to_datetime(Vaisala2['Time'])
 # set the datetime as index:
 Vaisala2 = Vaisala2.set_index('Time')
@@ -139,6 +150,9 @@ cols_list = list(DATA2.columns)
 SUMMARY = DATA2.describe()
 print(SUMMARY['PM25'])
 print(SUMMARY['PM2.5（μg/m3）'])
+
+
+
 
 
 #%% Data Visualization (time-series)
@@ -198,3 +212,42 @@ plt.xlabel('CO (SORPES)')
 plt.ylabel('CO (Vaisala)')
 plt.title('CO: SORPES vs Vaisala')
 plt.show()
+
+#%% To plot only good Vaisala data
+
+idx = DATA2['PM25']>20
+DATA3=DATA2[idx]
+
+# Use seaborn style defaults and set the default figure size
+sns.set(rc={'figure.figsize':(11, 4)})
+sns.set(font_scale=1.5, rc={'text.usetex' : False})
+ax = DATA3['PM2.5（μg/m3）'].plot(linewidth=0.5);
+DATA3['PM25'].plot(linewidth=0.5);
+ax.set_title('SORPES vs Vaisala: PM$_{2.5}$ below 10 $\mu g/m^3$')
+ax.set_ylabel('PM$_{2.5}$ [$\mu g/m^3$]')
+plt.style.use('seaborn')
+
+# PM2.5 Scatter plot
+plt.scatter(DATA3['PM2.5（μg/m3）'],DATA3['PM25'],label='PM2.5')
+plt.legend(loc='best', fontsize=16)
+plt.xlabel('PM2.5 (SORPES)')
+plt.ylabel('PM2.5 (Vaisala)')
+plt.title('SORPES vs Vaisala: PM$_{2.5}$ below 10 $\mu g/m^3$')
+plt.show()
+
+
+#%% PM2.5 Scatter plot
+
+mask1a = (Vaisala1a.index > '2019-4-1') & (Vaisala1a.index <= '2019-7-1')
+mask2a = (Vaisala2a.index > '2019-4-1') & (Vaisala2a.index <= '2019-7-1')
+
+
+# Use seaborn style defaults and set the default figure size
+sns.set(rc={'figure.figsize':(11, 4)})
+sns.set(font_scale=1.5, rc={'text.usetex' : False})
+ax = Vaisala1a['PM25'][mask1a].plot(linewidth=0.5);
+Vaisala2a['PM25'][mask2a].plot(linewidth=0.5);
+ax.set_title('Only between 1 Apr until 1 Jun 2019')
+ax.set_ylabel('PM$_{2.5}$ [$\mu g/m^3$]')
+plt.style.use('seaborn')
+

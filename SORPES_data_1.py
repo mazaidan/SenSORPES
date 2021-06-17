@@ -160,10 +160,29 @@ plt.style.use('seaborn')
 #%% Now, we will combine all data, SORPES1b, Vaisala1b and Vaisala1a
 # We need to relabel the names of columns first
 
+print(Vaisala1b.columns)
+Vaisala1b.rename(columns={'P': 'Pv1', 'T': 'Tv1', 'CO': 'COv1', 'Health': 'Healthv1'
+             , 'NO2': 'NO2v1', 'O3': 'O3v1', 'PM10': 'PM10v1'
+             , 'PM25': 'PM25v1', 'RH': 'RHv1', 'SO2': 'SO2v1'
+             , 'NN1': 'NN1v1', 'CO2': 'CO2v1', 'NO': 'NOv1'
+             , 'NN2': 'NN2v1'},inplace=True)
+
+print(Vaisala2b.columns)
+Vaisala2b.rename(columns={'P': 'Pv2', 'T': 'Tv2', 'CO': 'COv2', 'Health': 'Healthv2'
+             , 'NO2': 'NO2v2', 'O3': 'O3v2', 'PM10': 'PM10v2'
+             , 'PM25': 'PM25v2', 'RH': 'RHv2', 'SO2': 'SO2v2'
+             , 'NN1': 'NN1v2', 'CO2': 'CO2v2', 'NO': 'NOv2'
+             , 'NN2': 'NN2v2'},inplace=True)
+
+print(SORPES1b.columns)
+SORPES1b.rename(columns={'O3 ppb': 'O3s', 'SO2 ppb': 'SO2s', 'CO ppm': 'COs', 'NO ppb': 'NOs'
+             , 'NO2 ppb': 'NO2s', 'NOx ppb': 'NOxs', 'NOy ppb': 'NOys'
+             , 'PM25': 'PM25v2', 'RH': 'RHv2', 'SO2': 'SO2v2'
+             , 'PM2.5（μg/m3）': 'PM25s'},inplace=True)
 
 
 # We concatanete the data:
-DATA2 = pd.concat([Vaisala2b, SORPES1b], join='inner', axis=1)
+DATA2 = pd.concat([SORPES1b,Vaisala1b,Vaisala2b], join='inner', axis=1)
 
 # See the columns, if they are merged:
 for col in DATA2:
@@ -174,8 +193,97 @@ cols_list = list(DATA2.columns)
 
 # Summary and see if both data have similar or very different statistics:
 SUMMARY = DATA2.describe()
-print(SUMMARY['PM25'])
-print(SUMMARY['PM2.5（μg/m3）'])
+print(SUMMARY['PM25s'])
+print(SUMMARY['PM25v1'])
+print(SUMMARY['PM25v2'])
+
+#%% Consistency Test: Meteorological variables
+# Scatter plots
+
+f, (ax1, ax2, ax3) = plt.subplots(1, 3, sharey=True)
+ax1.scatter(DATA2['Tv1'], DATA2['Tv2'])
+ax1.set_title('Temperature')
+ax1.set_xlim(-10, 50)
+ax1.set_ylim(-10, 50)
+ax1.set_xlabel('Vaisala 1: Temp [C] ')
+ax1.set_ylabel('Vaisala 2: Temp [C] ')
+ax2.scatter(DATA2['RHv1'], DATA2['RHv2'])
+ax2.set_title('Relative Humidity')
+ax2.set_xlim(50, 100)
+ax2.set_ylim(50, 100)
+ax2.set_xlabel('Vaisala 1: RH [%] ')
+ax2.set_ylabel('Vaisala 2: RH [%] ')
+ax3.scatter(DATA2['Pv1'], DATA2['Pv2'])
+ax3.set_title('Pressure')
+ax3.set_xlim(950, 1050)
+ax3.set_ylim(950, 1050)
+ax3.set_xlabel('Vaisala 1: P [mbar] ')
+ax3.set_ylabel('Vaisala 2: P [mbar] ')
+
+#%% Consistency Test: Time-Series plots
+
+#figure, axes = plt.subplots(1, 2)
+#df1.plot(ax=axes[0])
+#df2.plot(ax=axes[1])
+
+f, (ax1, ax2, ax3) = plt.subplots(3, 1, sharey=True)
+#sns.set(rc={'figure.figsize':(11, 4)})
+sns.set(font_scale=1.0, rc={'text.usetex' : False})
+
+ax1 = plt.subplot(311)
+#DATA2['Ts'].plot(ax=ax1,linewidth=0.5);
+DATA2['Tv1'].plot(ax=ax1,linewidth=0.5);
+DATA2['Tv2'].plot(ax=ax1,linewidth=0.5);
+#ax1.set_title('Time-series data: Temperature')
+ax1.set_ylabel('Temp [$^{\circ}$C]')
+ax1.legend(labels=["Vaisala1","Vaisala2"])
+ax1.set_ylim([-10, 50])
+#plt.style.use('seaborn')
+
+ax2 = plt.subplot(312)
+#sns.set(font_scale=1.0, rc={'text.usetex' : False})
+#DATA2['RHs'].plot(ax=ax1,linewidth=0.5);
+DATA2['RHv1'].plot(ax=ax2,linewidth=0.5);
+DATA2['RHv2'].plot(ax=ax2,linewidth=0.5);
+#ax2.set_title('Time-series data: Relative Humidity')
+ax2.set_ylabel('RH [%]')
+ax2.legend(labels=["Vaisala1","Vaisala2"])
+ax2.set_ylim([10, 100])
+#plt.style.use('seaborn')
+
+ax3 = plt.subplot(313)
+#sns.set(font_scale=1.0, rc={'text.usetex' : False})
+#DATA2['RHs'].plot(ax=ax1,linewidth=0.5);
+DATA2['Pv1'].plot(ax=ax3,linewidth=0.5);
+DATA2['Pv2'].plot(ax=ax3,linewidth=0.5);
+#ax3.set_title('Time-series data: Pressure')
+ax3.set_ylabel('P [mbar]')
+ax3.legend(labels=["Vaisala1","Vaisala2"])
+ax3.set_ylim([950, 1050])
+plt.style.use('seaborn')
+
+
+
+
+
+#%%
+
+# PM2.5 Scatter plot
+plt.scatter(DATA2['PM2.5（μg/m3）'],DATA2['PM25'],label='PM2.5')
+plt.legend(loc='best', fontsize=16)
+plt.xlabel('PM2.5 (SORPES)')
+plt.ylabel('PM2.5 (Vaisala)')
+plt.title('PM2.5: SORPES vs Vaisala')
+plt.show()
+
+
+
+
+
+# Create four polar axes and access them through the returned array
+fig, axs = plt.subplots(2, 2, subplot_kw=dict(projection="polar"))
+axs[0, 0].plot(x, y)
+axs[1, 1].scatter(x, y)
 
 
 

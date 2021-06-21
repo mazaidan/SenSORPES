@@ -209,6 +209,68 @@ print(SUMMARY['PM25s'])
 print(SUMMARY['PM25v1'])
 print(SUMMARY['PM25v2'])
 
+#%% We know that PM2.5 sensors do not drift, 
+# but they are simply do now work
+# To check if trace gases encounter drift (a complete failure)
+
+sns.set(rc={'figure.figsize':(11, 4)})
+sns.set(font_scale=1.5, rc={'text.usetex' : False})
+ax = DATA2['COs'].plot(linewidth=0.5);
+DATA2['COv1'].plot(linewidth=0.5);
+DATA2['COv2'].plot(linewidth=0.5);
+ax.set_title('CO sensors drifting')
+ax.set_ylabel('CO [ppb]')
+plt.ylim(0, None)
+plt.legend(labels=["SORPES","Vaisala1","Vaisala2"])
+plt.style.use('seaborn')
+
+
+sns.set(rc={'figure.figsize':(11, 4)})
+sns.set(font_scale=1.5, rc={'text.usetex' : False})
+ax = DATA2['O3s'].plot(linewidth=0.5);
+DATA2['O3v1'].plot(linewidth=0.5);
+DATA2['O3v2'].plot(linewidth=0.5);
+ax.set_title('O$_3$ sensors drifting')
+ax.set_ylabel('O$_{3}$ [ppb]')
+plt.ylim(0, None)
+plt.legend(labels=["SORPES","Vaisala1","Vaisala2"])
+plt.style.use('seaborn')
+
+sns.set(rc={'figure.figsize':(11, 4)})
+sns.set(font_scale=1.5, rc={'text.usetex' : False})
+ax = DATA2['NOs'].plot(linewidth=0.5);
+DATA2['NOv1'].plot(linewidth=0.5);
+DATA2['NOv2'].plot(linewidth=0.5);
+ax.set_title('NO sensors drifting')
+ax.set_ylabel('NO [ppb]')
+plt.ylim(0, None)
+plt.legend(labels=["SORPES","Vaisala1","Vaisala2"])
+plt.style.use('seaborn')
+
+sns.set(rc={'figure.figsize':(11, 4)})
+sns.set(font_scale=1.5, rc={'text.usetex' : False})
+ax = DATA2['NO2s'].plot(linewidth=0.5);
+DATA2['NO2v1'].plot(linewidth=0.5);
+DATA2['NO2v2'].plot(linewidth=0.5);
+ax.set_title('NO$_2$ sensors drifting')
+ax.set_ylabel('NO$_{2}$ [ppb]')
+plt.ylim(0, None)
+plt.legend(labels=["SORPES","Vaisala1","Vaisala2"])
+plt.style.use('seaborn')
+
+sns.set(rc={'figure.figsize':(11, 4)})
+sns.set(font_scale=1.5, rc={'text.usetex' : False})
+ax = DATA2['SO2s'].plot(linewidth=0.5);
+DATA2['SO2v1'].plot(linewidth=0.5);
+#DATA2['SO2v2'].plot(linewidth=0.5);
+ax.set_title('SO$_2$ sensors drifting')
+ax.set_ylabel('SO$_{2}$ [ppb]')
+plt.ylim(0, None)
+plt.legend(labels=["SORPES","Vaisala1","Vaisala2"])
+plt.style.use('seaborn')
+
+
+
 #%% Consistency Test: Meteorological variables
 # We need to:
     # Clean the code and make more functions for cleaning

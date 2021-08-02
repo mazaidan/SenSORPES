@@ -271,6 +271,25 @@ plt.style.use('seaborn')
 
 
 
+#%%
+mask0a = (SORPES1a.index > '2019-4-1') & (SORPES1a.index <= '2019-7-1')
+mask1a = (Vaisala1a.index > '2019-4-1') & (Vaisala1a.index <= '2019-7-1')
+mask2a = (Vaisala2a.index > '2019-4-1') & (Vaisala2a.index <= '2019-7-1')
+
+
+# Use seaborn style defaults and set the default figure size
+sns.set(rc={'figure.figsize':(11, 4)})
+sns.set(font_scale=1.5, rc={'text.usetex' : False})
+ax = SORPES1a['NO2 ppb'][mask0a].plot(linewidth=0.5)
+Vaisala1a['NO2'][mask1a].plot(linewidth=0.5);
+Vaisala2a['NO'][mask2a].plot(linewidth=0.5);
+ax.set_title('Only between 1 Apr until 1 Jun 2019')
+ax.set_ylabel('NO$_{2}$ [ppb]')
+plt.legend(labels=["SORPES","Vaisala1","Vaisala2"])
+plt.style.use('seaborn')
+
+
+
 #%% Consistency Test: Meteorological variables
 # We need to:
     # Clean the code and make more functions for cleaning

@@ -224,17 +224,72 @@ plt.ylim(0, None)
 plt.legend(labels=["SORPES","Vaisala1","Vaisala2"])
 plt.style.use('seaborn')
 
+sns.set(rc={'figure.figsize':(11, 4)})
+sns.set(font_scale=1.5, rc={'text.usetex' : False})
+ax = DATA2['COs'].plot(linewidth=0.5);
+#DATA2['COv1'].plot(linewidth=0.5);
+DATA2['COv2'].plot(linewidth=0.5);
+ax.set_title('CO sensors drifting')
+ax.set_ylabel('CO [ppb]')
+plt.ylim(0, None)
+#plt.legend(labels=["SORPES","Vaisala1","Vaisala2"])
+plt.legend(labels=["SORPES","Vaisala2"])
+plt.style.use('seaborn')
+
+AE_CO = abs(DATA2['COs'] - DATA2['COv2'])
+sns.set(rc={'figure.figsize':(11, 4)})
+sns.set(font_scale=1.5, rc={'text.usetex' : False})
+ax = AE_CO.plot(linewidth=0.5);
+ax.set_title("Absolute Error between SORPES and Vaisala2")
+ax.set_ylabel('Absolute Error CO [ppb]')
+plt.ylim(0, None)
+#plt.legend(labels=["Absolute Error between SORPES and Vaisala2"])
+plt.style.use('seaborn') 
+
+
+sns.set(rc={'figure.figsize':(11, 4)})
+sns.set(font_scale=1.5, rc={'text.usetex' : False})
+ax = DATA2['PM25s'].plot(linewidth=0.5);
+DATA2['PM25v1'].plot(linewidth=0.5);
+DATA2['PM25v2'].plot(linewidth=0.5);
+ax.set_title('PM$_{2.5}$ sensors faulty')
+ax.set_ylabel('PM$_{2.5}$ [$\mu$g/m$^3$]')
+plt.ylim(0, None)
+plt.legend(labels=["SORPES","Vaisala1","Vaisala2"])
+plt.style.use('seaborn')
+
+
+sns.set(rc={'figure.figsize':(7, 7)})
+sns.set(font_scale=1.5, rc={'text.usetex' : False})
+plt.scatter(DATA2['PM25s'], DATA2['PM25v2'],  alpha=0.5)
+plt.xlim([0, 300])
+plt.ylim([0, 300])
+plt.title('PM$_{2.5}$ sensor faulty')
+plt.xlabel('PM$_{2.5}$ [$\mu$g/m$^3$] (SORPES)')
+plt.ylabel('PM$_{2.5}$ [$\mu$g/m$^3$] (Vaisala2)')
+plt.show()
+
 
 sns.set(rc={'figure.figsize':(11, 4)})
 sns.set(font_scale=1.5, rc={'text.usetex' : False})
 ax = DATA2['O3s'].plot(linewidth=0.5);
 DATA2['O3v1'].plot(linewidth=0.5);
 DATA2['O3v2'].plot(linewidth=0.5);
-ax.set_title('O$_3$ sensors drifting')
+ax.set_title('O$_3$ sensors faulty')
 ax.set_ylabel('O$_{3}$ [ppb]')
 plt.ylim(0, None)
 plt.legend(labels=["SORPES","Vaisala1","Vaisala2"])
 plt.style.use('seaborn')
+
+sns.set(rc={'figure.figsize':(7, 7)})
+sns.set(font_scale=1.5, rc={'text.usetex' : False})
+plt.scatter(DATA2['O3s'], DATA2['O3v2'],  alpha=0.5)
+plt.xlim([0, 125])
+plt.ylim([0, 125])
+plt.title('O$_{3}$ faulty')
+plt.xlabel('PM$_{2.5}$ [ppb] (SORPES)')
+plt.ylabel('PM$_{2.5}$ [ppb] (Vaisala2)')
+plt.show()
 
 sns.set(rc={'figure.figsize':(11, 4)})
 sns.set(font_scale=1.5, rc={'text.usetex' : False})

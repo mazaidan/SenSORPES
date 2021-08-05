@@ -218,7 +218,7 @@ sns.set(font_scale=1.5, rc={'text.usetex' : False})
 ax = DATA2['COs'].plot(linewidth=0.5);
 DATA2['COv1'].plot(linewidth=0.5);
 DATA2['COv2'].plot(linewidth=0.5);
-ax.set_title('CO sensors drifting')
+ax.set_title('CO sensors degradation')
 ax.set_ylabel('CO [ppb]')
 plt.ylim(0, None)
 plt.legend(labels=["SORPES","Vaisala1","Vaisala2"])
@@ -229,7 +229,7 @@ sns.set(font_scale=1.5, rc={'text.usetex' : False})
 ax = DATA2['COs'].plot(linewidth=0.5);
 #DATA2['COv1'].plot(linewidth=0.5);
 DATA2['COv2'].plot(linewidth=0.5);
-ax.set_title('CO sensors drifting')
+ax.set_title('CO sensors degradation')
 ax.set_ylabel('CO [ppb]')
 plt.ylim(0, None)
 #plt.legend(labels=["SORPES","Vaisala1","Vaisala2"])
@@ -307,11 +307,21 @@ sns.set(font_scale=1.5, rc={'text.usetex' : False})
 ax = DATA2['NO2s'].plot(linewidth=0.5);
 DATA2['NO2v1'].plot(linewidth=0.5);
 DATA2['NO2v2'].plot(linewidth=0.5);
-ax.set_title('NO$_2$ sensors drifting')
+ax.set_title('NO$_2$ sensors faulty')
 ax.set_ylabel('NO$_{2}$ [ppb]')
 plt.ylim(0, None)
 plt.legend(labels=["SORPES","Vaisala1","Vaisala2"])
 plt.style.use('seaborn')
+
+sns.set(rc={'figure.figsize':(7, 7)})
+sns.set(font_scale=1.5, rc={'text.usetex' : False})
+plt.scatter(DATA2['NO2s'], DATA2['NO2v2'],  alpha=0.5)
+plt.xlim([0, 50])
+plt.ylim([0, 50])
+plt.title('NO$_{2}$ faulty')
+plt.xlabel('NO$_{2}$ [ppb] (SORPES)')
+plt.ylabel('NO$_{2}$ [ppb] (Vaisala2)')
+plt.show()
 
 sns.set(rc={'figure.figsize':(11, 4)})
 sns.set(font_scale=1.5, rc={'text.usetex' : False})

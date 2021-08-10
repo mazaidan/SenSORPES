@@ -360,29 +360,34 @@ plt.style.use('seaborn')
     # Clean the code and make more functions for cleaning
     # Scatter plot covers entire Vaisala sensors
 
-
-
 # Scatter plots
 
-f, (ax1, ax2, ax3) = plt.subplots(1, 3, sharey=True)
-ax1.scatter(DATA2['Tv1'], DATA2['Tv2'])
-ax1.set_title('Temperature')
-ax1.set_xlim(-10, 50)
-ax1.set_ylim(-10, 50)
-ax1.set_xlabel('Vaisala 1: Temp [C] ')
-ax1.set_ylabel('Vaisala 2: Temp [C] ')
-ax2.scatter(DATA2['RHv1'], DATA2['RHv2'])
-ax2.set_title('Relative Humidity')
-ax2.set_xlim(50, 100)
-ax2.set_ylim(50, 100)
-ax2.set_xlabel('Vaisala 1: RH [%] ')
-ax2.set_ylabel('Vaisala 2: RH [%] ')
-ax3.scatter(DATA2['Pv1'], DATA2['Pv2'])
-ax3.set_title('Pressure')
-ax3.set_xlim(950, 1050)
-ax3.set_ylim(950, 1050)
-ax3.set_xlabel('Vaisala 1: P [mbar] ')
-ax3.set_ylabel('Vaisala 2: P [mbar] ')
+#f, (ax1, ax2, ax3) = plt.subplots(1, 3, sharey=True)
+sns.set(rc={'figure.figsize':(10,5)})
+plt.subplot(131)
+plt.scatter(DATA2['Tv2'], DATA2['Tv3'])
+plt.title('Temperature')
+plt.xlim(-10, 50)
+plt.ylim(-10, 50)
+plt.xlabel('Vaisala 2: Temp [C] ')
+plt.ylabel('Vaisala 3: Temp [C] ')
+
+plt.subplot(132)
+plt.scatter(DATA2['RHv2'], DATA2['RHv3'])
+plt.title('Relative Humidity')
+plt.xlim(0, 110)
+plt.ylim(0, 110)
+plt.xlabel('Vaisala 2: RH [%] ')
+plt.ylabel('Vaisala 3: RH [%] ')
+
+plt.subplot(133)
+plt.scatter(DATA2['Pv2'], DATA2['Pv3'])
+plt.title('Pressure')
+plt.xlim(980, 1040)
+plt.ylim(980, 1040)
+plt.xlabel('Vaisala 2: P [mbar] ')
+plt.ylabel('Vaisala 3: P [mbar] ')
+
 
 #%% Consistency Test: Time-Series plots
 
